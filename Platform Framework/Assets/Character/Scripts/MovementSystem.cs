@@ -3,7 +3,7 @@ using UnityEngine;
 public class MovementSystem : MonoBehaviour
 {
     [Header("Variables")]
-    [SerializeField] float m_maxSpeed = 4.5f;
+    [SerializeField] float m_maxSpeed = 1f;
     [SerializeField] float m_slowDownSpeed = 0.5f;
     [SerializeField] float m_jumpForce = 7.5f;
 
@@ -16,6 +16,7 @@ public class MovementSystem : MonoBehaviour
     private Rigidbody2D m_body2d;
     private Sensor_Prototype m_groundSensor;
     private AudioManager_PrototypeHero m_audioManager;
+    private float m_baseSpeed = 4.5f;
     private bool m_grounded = false;
     private bool m_moving = false;
     private int m_facingDirection = 1;
@@ -81,7 +82,13 @@ public class MovementSystem : MonoBehaviour
         // SlowDownSpeed helps decelerate the characters when stopping
         float SlowDownSpeed = m_moving ? 1.0f : m_slowDownSpeed;
         // Set movement
-        m_body2d.linearVelocityX = inputX * m_maxSpeed * SlowDownSpeed;
+        m_body2d.linearVelocityX = inputX * m_maxSpeed * m_baseSpeed * SlowDownSpeed;
+        // Set the animator's speed
+        if (m_moving & m_grounded)
+            m_animator.speed = m_maxSpeed;
+        else
+            m_animator.speed = 1.0f;
+
 
         // Set AirSpeed in animator
         m_animator.SetFloat("AirSpeedY", m_body2d.linearVelocity.y);
