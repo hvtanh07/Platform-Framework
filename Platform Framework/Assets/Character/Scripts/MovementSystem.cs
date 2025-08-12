@@ -4,8 +4,9 @@ public class MovementSystem : MonoBehaviour
 {
     [Header("Variables")]
     [SerializeField] float m_maxSpeed = 4.5f;
+    [SerializeField] float m_slowDownSpeed = 0.5f;
     [SerializeField] float m_jumpForce = 7.5f;
-    [SerializeField] bool m_hideSword = false;
+
     [Header("Effects")]
     [SerializeField] GameObject m_RunStopDust;
     [SerializeField] GameObject m_JumpDust;
@@ -78,17 +79,12 @@ public class MovementSystem : MonoBehaviour
         }
 
         // SlowDownSpeed helps decelerate the characters when stopping
-        float SlowDownSpeed = m_moving ? 1.0f : 0.5f;
+        float SlowDownSpeed = m_moving ? 1.0f : m_slowDownSpeed;
         // Set movement
-        //m_body2d.linearVelocity = new Vector2(inputX * m_maxSpeed * SlowDownSpeed, m_body2d.linearVelocity.y);
-        m_body2d.linearVelocityX = m_moving? inputX * m_maxSpeed : 0;
+        m_body2d.linearVelocityX = inputX * m_maxSpeed * SlowDownSpeed;
 
         // Set AirSpeed in animator
         m_animator.SetFloat("AirSpeedY", m_body2d.linearVelocity.y);
-
-        // Set Animation layer for hiding sword
-        int boolInt = m_hideSword ? 1 : 0;
-        m_animator.SetLayerWeight(1, boolInt);
 
         // -- Handle Animations --
         //Jump
